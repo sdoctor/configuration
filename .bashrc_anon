@@ -1,0 +1,188 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+if command -v tmux>/dev/null; then
+    [[ $TERM != "screen" ]] && exec tmux
+fi
+
+export NO_AT_BRIDGE=1
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend                 # append to history, don't overwrite it
+# attempt to save all lines of a multiple-line command in the same history entry
+shopt -s cmdhist
+# save multi-line commands to the history with embedded newlines
+shopt -s lithist
+HISTTIMEFORMAT=`echo -e "\033[33;1m"%F "\033[96;1m"%T "\033[0m" `
+
+stty -ixon
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# User-specific prefs
+set colored-stats on
+set bell-style none
+
+# Make shell case insensitive
+set completion-ignore-case On
+
+# Get out cores - may need to assess where cores are output
+alias cores='/bin/ls -ltr /disk1/tmp/{core.*,*.crash} | tail -8 | sed "s|/disk1/tmp/core\.[^.]*\.\(.*\)\.[0-9]*\.[0-9]*|gdb \1 \0|"'
+
+function catFun() {
+    arr=("$@")
+    for f in ${arr[@]}; do
+        if [[ -f $f ]]; then
+            echo -e "\n\033[4;32m ==> " $f " <== \033[0m";
+            cat -n $f;
+        else
+            echo -e "\n\033[34m ==> " $f " is directory \033[0m";
+        fi;
+   done;
+}
+alias catall=catFun
+
+function pFun() { "find `pwd` | grep $@"; }
+alias p=pFun
+
+function compileFun() { "g++ -Wall -Wextra $@"; }
+alias compile=compileFun
+
+function runFun() { "./a.out"; }
+alias run=runFun
+
+export GREP_COLORS="sl=0;33;49:ms=1;34;49"
+
+function cpplintFun() { python "~/bin/cpplint.py $@"; }
+alias cpplint=cpplintFun
+
+# set icon name and window title to string (1 for icon name, 2 for window title in place of the 0)
+function setwinFun() { 'echo -en "\033]2; $@ \007"'; }
+alias setwin=setwinFun
+function settermFun() { 'echo -en "\033]1; $@ \007"'; }
+alias setterm=settermFun
+
+# Git aliases
+function gCloneFun() { git clone "<git@git.URL>/$@/$@.git"; }
+alias gclone=gCloneFun
+alias gp="git pull --rebase"
+alias gpu="git pull --rebase; git push"
+alias gs="git status"
+function glFun() { git log "-$@" --pretty=oneline; }
+alias gl=glFun
+function glFunStat() { git log "-$@" --stat; }
+alias gls=glFunStat
+alias gChecklist="echo 'git pull --rebase origin master; git difftool origin/master; git review submit -m etc'"
+
+alias c=clear
+alias tree="tree -fC"
+set whoami = `hostname | sed s/ubc//`
+
+source ~/git-prompt.sh
+PROMPT_COMMAND='__git_ps1 "\[\e[1;36m\]$(date +%H:%M) \[\e[32m\]\u\[\e[1;34m\]@\[\e[32m\]\h: \[\e[1;34m\]\w\[\e[0m\] \n\[\e[1;36m\]$\[\e[0m\]" " "; history -a'
+GIT_PS1_SHOWCOLORHINTS=true
+GIT_PS1_SHOWDIRTYSTATE=true
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set up capslock to be additional control
+# TODO: this should only be on setup - not every time you run bashrc
+setxkbmap -option caps:ctrl_modifier
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -ltrhG'
+alias lla='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Useful shortcuts
+alias watch='watch -pcn 1'
+function saveFun() { "pbpaste > $@"; }
+alias save=saveFun
+
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# SSH-Agent
+SSH_ENV="$HOME/.ssh/environment"
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+# Source SSH settings, if applicable
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
+
+
+# emacs aliases
+alias emt='emacsclient -t'  # open new emacs frame in current terminal
+alias emc='emacsclient -c'  # create a new frame
+alias emd='emacs --daemon'  # startup the daemon
+alias kem="emacsclient -e '(kill-emacs)'"  # kill emacs daemon
