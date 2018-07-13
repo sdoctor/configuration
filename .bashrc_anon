@@ -132,7 +132,8 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 alias ll='ls -ltrhG'
 alias lla='ls -alF'
 alias la='ls -A'
-alias l='ls -CF'
+alias l='ls -lah --color | grep "^d" && ls -lah --color | grep -v -E "^d|^-|^total" && ls -lahX --color | grep "^-"'
+alias lc='ls -CF'
 
 # Useful shortcuts
 alias watch='watch -pcn 1'
