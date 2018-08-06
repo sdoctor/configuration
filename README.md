@@ -23,6 +23,8 @@
 ** You will have to allow iterm2 to modify preferences
 * Set up keyboard on mac to turn caps lock to additional control
 ** Settings > Keyboard > Modifier Keys > Caps Lock -> Control
+* Install tree utility
+** brew install tree
 
 ## Configuration Steps:
 1. clone this repo
