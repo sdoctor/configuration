@@ -5,6 +5,8 @@
 ** https://www.iterm2.com/
 * homebrew
 ** https://brew.sh/
+* macports
+** https://www.macports.org/install.php
 * tmux
 ** https://hackernoon.com/a-gentle-introduction-to-tmux-8d784c404340j
 ** `brew install tmux`
@@ -25,6 +27,8 @@
 ** Settings > Keyboard > Modifier Keys > Caps Lock -> Control
 * Install tree utility
 ** brew install tree
+* Install exuberant ctags
+** port install ctags
 
 ## Configuration Steps:
 1. clone this repo
