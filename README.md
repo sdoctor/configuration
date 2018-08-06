@@ -36,3 +36,6 @@
 3. cd ~; ln -s <path_to>/configuration/.bashrc .bashrc
 4. Repeat above for .tmux.conf, .gitconfig
 5. create symbolic link for custom.el in .emacs.d/personal/
+
+## Emacs packages to install
+* M-x package-install projectile
