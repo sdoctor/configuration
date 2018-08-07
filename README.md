@@ -30,6 +30,7 @@
 * Install exuberant ctags
   * port install ctags or brew install ctags
   * For rust, you can use https://github.com/dan-t/rusty-tags
+  * In emacs, use M-x visit-tags-table to replace current tags with the new tags
 
 ## Configuration Steps:
 1. clone this repo
