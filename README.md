@@ -39,4 +39,8 @@
 6. Make sure your git config settings are updated - run git config -l to verify
 
 ## Emacs packages to install
-* M-x package-install projectile
+* M-x package-install projectile (this should come as part of prelude)
+* TODO: for Mac, need to figure out how to set font permanently in emacs
+* TODO: for Mac with external keyboard, had to do some extra configuration (also for external scroll-wheel mouse)
+* Some of the prelude key bindings are weird (C-c C-P rather than C-c P) and (M-x adds a ^ to the query)
+* TODO: How to get etags up and running for rust
