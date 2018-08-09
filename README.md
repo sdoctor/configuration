@@ -39,6 +39,9 @@
 4. Repeat above for .tmux.conf, .gitconfig
 5. create symbolic link for custom.el in .emacs.d/personal/
 6. Make sure your git config settings are updated - run git config -l to verify
+* One thing to check is the editor (on mac esp). 
+  * git config --global core.editor "emacs -nw"
+  * However, note that this editor will be in read-only mode, so you need
 
 ## Emacs packages to install
 * M-x package-install projectile (this should come as part of prelude)
