@@ -17,8 +17,9 @@
   * verify that the emacs being run is >= emacs25
 * emacs prelude
   * https://github.com/bbatsov/prelude
-* set up git (with ssh-keygen etc)
+* set up git (with ssh-keygen, personal access token, etc)
   * https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+  * https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
 * Set up keys in iterm2 to turn left command into "alt/meta"
   * Preferences > Keys > Left command key -> Left Option
   * Preferences > Profiles > Keys > Left option key -> Esc+
